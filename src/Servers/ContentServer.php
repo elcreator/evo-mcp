@@ -16,16 +16,25 @@ use EvolutionCMS\eMCP\Tools\Content\ContentNextSiblingsTool;
 use EvolutionCMS\eMCP\Tools\Content\ContentPrevSiblingsTool;
 use EvolutionCMS\eMCP\Tools\Content\ContentSiblingsTool;
 use EvolutionCMS\eMCP\Tools\Content\ContentSiblingsRangeTool;
+use EvolutionCMS\eMCP\Tools\Elements\ElementsGetTool;
+use EvolutionCMS\eMCP\Tools\Elements\ElementsListTool;
 use EvolutionCMS\eMCP\Tools\ModelCatalog\ModelGetTool;
 use EvolutionCMS\eMCP\Tools\ModelCatalog\ModelListTool;
+use EvolutionCMS\eMCP\Tools\Write\CacheClearTool;
+use EvolutionCMS\eMCP\Tools\Write\ContentCreateTool;
+use EvolutionCMS\eMCP\Tools\Write\ContentPublishTool;
+use EvolutionCMS\eMCP\Tools\Write\ContentUpdateTool;
+use EvolutionCMS\eMCP\Tools\Write\ElementsSaveTool;
+use EvolutionCMS\eMCP\Services\ToolRegistry;
 use Laravel\Mcp\Server;
+use Laravel\Mcp\Server\Contracts\Transport;
 use Laravel\Mcp\Server\Attributes\Instructions;
 use Laravel\Mcp\Server\Attributes\Name;
 use Laravel\Mcp\Server\Attributes\Version;
 
 #[Name('eMCP Content Server')]
 #[Version('1.0.0')]
-#[Instructions('Default eMCP server for initialize/tools:list smoke checks in clean Evolution CMS.')]
+#[Instructions('Evolution CMS content and elements. Every call runs as the token owner with their manager permissions; evo.write.* tools change the site and need the mcp:write scope.')]
 class ContentServer extends Server
 {
     protected array $tools = [
@@ -43,7 +52,31 @@ class ContentServer extends Server
         ContentSiblingsRangeTool::class,
         ModelListTool::class,
         ModelGetTool::class,
+        ElementsListTool::class,
+        ElementsGetTool::class,
+        // evo.write.* tools are listed but refused unless security.enable_write_tools is on
+        // and the token carries the write scope; each one re-checks the user's manager permissions.
+        ContentUpdateTool::class,
+        ContentCreateTool::class,
+        ContentPublishTool::class,
+        ElementsSaveTool::class,
+        CacheClearTool::class,
     ];
+
+    /** Handle under which extras contribute tools (ToolProvider::server()). */
+    public const HANDLE = 'content';
+
+    public function __construct(Transport $transport)
+    {
+        // Tools other extras registered through ToolRegistry / mcp.servers[].extra_tools.
+        foreach (app(ToolRegistry::class)->toolsFor(self::HANDLE) as $class) {
+            if (!in_array($class, $this->tools, true)) {
+                $this->tools[] = $class;
+            }
+        }
+
+        parent::__construct($transport);
+    }
 
     protected array $resources = [];
 

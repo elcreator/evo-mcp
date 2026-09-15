@@ -34,7 +34,7 @@ Operations runbook: `OPERATIONS.md`.
 - Evolution CMS 3.5.2+
 - PHP 8.3+
 - Composer 2.2+
-- `seiger/sapi` 1.x (installed as dependency)
+- `seiger/sapi` 1.x (installed as dependency; only used when `auth.mode = sapi_jwt`)
 - `seiger/stask` 1.x (installed as dependency)
 
 ## Install
@@ -79,6 +79,65 @@ Generated classes are placed in `core/custom/app/Mcp/...`.
 - get JWT from `POST /{SAPI_BASE_PATH}/{SAPI_VERSION}/token` (sApi token endpoint).
 5. Optional async:
 - set `queue.driver=stask`, ensure `sTask` installed, use dispatch endpoint for long-running jobs.
+
+## Personal access tokens (default API auth)
+Since this version the API endpoint needs **no extra packages**: a manager user creates a
+personal access token and every request runs **as that user**, with that user's role,
+permissions and document groups — exactly as if they were logged into the manager.
+
+1. Give the role the `emcp` permission (admins have it after `migrate`).
+2. Open **Tools → MCP tokens** in the manager (`{manager_url}/emcp/tokens`), or run
+   `php artisan emcp:token:create <username> --scopes=mcp:read,mcp:call --expires=90`.
+3. Connect the agent:
+
+```bash
+claude mcp add --transport http evo https://example.com/mcp/content   --header "Authorization: Bearer emcp_..."
+```
+
+```toml
+# Codex ~/.codex/config.toml
+[mcp_servers.evo]
+url = "https://example.com/mcp/content"
+bearer_token_env_var = "EVO_MCP_TOKEN"
+```
+
+Scopes narrow a token, never widen the user: `mcp:read` (list/read), `mcp:call` (read-only
+tools), `mcp:write` (`evo.write.*` tools, also gated by `security.enable_write_tools`),
+`mcp:admin`. Tokens are stored hashed, can expire, and are revoked from the same page or with
+`emcp:token:revoke`. `emcp:token:list` shows what exists.
+
+`auth.mode` in `core/custom/config/cms/settings/eMCP.php` selects `pat` (default), `sapi_jwt`
+(seiger/sapi JWT, now also impersonating the JWT user) or `none`.
+
+### Write tools
+`evo.write.content.update|create|publish`, `evo.write.elements.save`, `evo.write.cache.clear`
+plus the read tools `evo.elements.list|get`. Each one re-checks the manager permission of the
+matching manager action (`save_document`, `publish_document`, `save_chunk`, `new_snippet`, ...),
+document-group access, element locks, fires the same `OnBefore*FormSave`/`On*FormSave` events
+and writes a `manager_log` row, so an admin sees API changes next to browser ones.
+
+### Tools from other extras
+An extra contributes tools by implementing `EvolutionCMS\eMCP\Contracts\ToolProvider` and
+registering it in its service provider's `boot()`:
+
+```php
+if (class_exists(\EvolutionCMS\eMCP\Services\ToolRegistry::class)) {
+    app(\EvolutionCMS\eMCP\Services\ToolRegistry::class)->register(new MyToolProvider());
+}
+```
+
+Tools are plain `Laravel\Mcp\Server\Tool` classes; mark the ones that change the site with
+`EvolutionCMS\eMCP\Contracts\WritesSite` so `security.enable_write_tools` and the `mcp:write`
+scope apply to them. Tool code runs as the impersonated manager, so `evo()->hasPermission()` and
+the extra's own guards behave as on the page. Alternatively list classes under
+`mcp.servers[].extra_tools`. Example: `elcreator/aimage` ships `aimage.*` tools this way.
+
+### Try it in Docker
+```bash
+cd docker && docker compose up --build      # prints the site URL and a ready-made token
+EVO_EXTRAS=elcreator/aimage AIMAGE_API_KEY=... docker compose up --build   # with extras
+docker/smoke.sh                             # runs an end-to-end check against it
+```
 
 ## Design Philosophy (Optional Reading)
 ### Why This Product Exists (4 Core Questions, Aristotle)

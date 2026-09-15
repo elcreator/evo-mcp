@@ -1,0 +1,29 @@
+services:
+  evo:
+    build:
+      context: .
+      args:
+        EVO_BRANCH: ${EVO_BRANCH:-3.5.x}
+    ports:
+      - "${EVO_PUBLIC_PORT:-8080}:80"
+    environment:
+      EVO_ADMIN_USERNAME: ${EVO_ADMIN_USERNAME:-admin}
+      EVO_ADMIN_PASSWORD: ${EVO_ADMIN_PASSWORD:-123456}
+      EVO_PUBLIC_PORT: ${EVO_PUBLIC_PORT:-8080}
+      # Comma-separated composer packages to install at first start (none by default)
+      EVO_EXTRAS: ${EVO_EXTRAS:-}
+      # Passed through for extras that read it (e.g. aIMage's site-wide key)
+      AIMAGE_API_KEY: ${AIMAGE_API_KEY:-}
+    volumes:
+      # The package under test, symlinked into core/vendor so edits are live (no rebuild needed).
+      - ..:/package
+      # Installed site survives container restarts; `docker compose down -v` starts from scratch.
+      - evo-site:/var/www/html
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost/"]
+      interval: 15s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  evo-site:

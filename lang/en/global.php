@@ -6,6 +6,7 @@ return [
     'permission_access' => 'Access eMCP',
     'permission_manage' => 'Manage MCP servers',
     'permission_dispatch' => 'Dispatch async MCP tasks',
+    'menu_tokens' => 'MCP tokens',
     'errors' => [
         'forbidden' => 'Forbidden',
         'scope_denied' => 'Scope denied',

@@ -8,7 +8,12 @@ use EvolutionCMS\ServiceProvider;
 use EvolutionCMS\eMCP\Console\Commands\eMcpListServersCommand;
 use EvolutionCMS\eMCP\Console\Commands\eMcpSyncWorkersCommand;
 use EvolutionCMS\eMCP\Console\Commands\eMcpTestCommand;
+use EvolutionCMS\eMCP\Console\Commands\eMcpTokenCreateCommand;
+use EvolutionCMS\eMCP\Console\Commands\eMcpTokenListCommand;
+use EvolutionCMS\eMCP\Console\Commands\eMcpTokenRevokeCommand;
 use EvolutionCMS\eMCP\Middleware\EnsureApiJwt;
+use EvolutionCMS\eMCP\Middleware\EnsureApiPat;
+use EvolutionCMS\eMCP\Middleware\ImpersonateManagerUser;
 use EvolutionCMS\eMCP\Middleware\EnsureMcpPermission;
 use EvolutionCMS\eMCP\Middleware\EnsureMcpScopes;
 use EvolutionCMS\eMCP\Middleware\RateLimitMcpRequests;
@@ -16,9 +21,12 @@ use EvolutionCMS\eMCP\Middleware\ResolveMcpActor;
 use EvolutionCMS\eMCP\Services\AuditLogger;
 use EvolutionCMS\eMCP\Services\DispatchWorkerRegistrar;
 use EvolutionCMS\eMCP\Services\IdempotencyStore;
+use EvolutionCMS\eMCP\Services\ManagerIdentity;
 use EvolutionCMS\eMCP\Services\McpExecutionService;
 use EvolutionCMS\eMCP\Services\SecurityPolicy;
 use EvolutionCMS\eMCP\Services\ServerRegistry;
+use EvolutionCMS\eMCP\Services\TokenService;
+use EvolutionCMS\eMCP\Services\ToolRegistry;
 use EvolutionCMS\eMCP\Support\Redactor;
 
 class eMCPServiceProvider extends ServiceProvider
@@ -35,6 +43,9 @@ class eMCPServiceProvider extends ServiceProvider
         $this->app->singleton(DispatchWorkerRegistrar::class);
         $this->app->singleton(SecurityPolicy::class);
         $this->app->singleton(IdempotencyStore::class);
+        $this->app->singleton(TokenService::class);
+        $this->app->singleton(ToolRegistry::class);
+        $this->app->singleton(ManagerIdentity::class);
         $this->app->singleton(Redactor::class, function () {
             $keys = config('cms.settings.eMCP.logging.redact_keys', []);
             return new Redactor(is_array($keys) ? $keys : []);
@@ -51,7 +62,9 @@ class eMCPServiceProvider extends ServiceProvider
 
         $this->loadMigrationsFrom(dirname(__DIR__) . '/database/migrations');
         $this->loadTranslationsFrom(dirname(__DIR__) . '/lang', 'eMCP');
+        $this->loadViewsFrom(dirname(__DIR__) . '/views', 'eMCP');
         $this->loadMgrRoutes();
+        $this->loadApiRoutes();
 
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
@@ -73,6 +86,9 @@ class eMCPServiceProvider extends ServiceProvider
             eMcpTestCommand::class,
             eMcpListServersCommand::class,
             eMcpSyncWorkersCommand::class,
+            eMcpTokenCreateCommand::class,
+            eMcpTokenListCommand::class,
+            eMcpTokenRevokeCommand::class,
         ]);
     }
 
@@ -87,6 +103,22 @@ class eMCPServiceProvider extends ServiceProvider
     {
         $this->app->router->middlewareGroup('mgr', config('app.middleware.mgr', []));
         include dirname(__DIR__) . '/src/Http/mgrRoutes.php';
+    }
+
+    /**
+     * Personal-access-token endpoint; only when `auth.mode` is `pat`, so sApi installs keep their routing untouched.
+     */
+    protected function loadApiRoutes(): void
+    {
+        if (!(bool)config('cms.settings.eMCP.enable', true) || !(bool)config('cms.settings.eMCP.mode.api', true)) {
+            return;
+        }
+
+        if (strtolower(trim((string)config('cms.settings.eMCP.auth.mode', 'pat'))) !== 'pat') {
+            return;
+        }
+
+        include dirname(__DIR__) . '/src/Http/apiRoutes.php';
     }
 
     protected function registerLoggingChannel(): void
@@ -127,6 +159,8 @@ class eMCPServiceProvider extends ServiceProvider
 
         $router->aliasMiddleware('emcp.permission', EnsureMcpPermission::class);
         $router->aliasMiddleware('emcp.jwt', EnsureApiJwt::class);
+        $router->aliasMiddleware('emcp.pat', EnsureApiPat::class);
+        $router->aliasMiddleware('emcp.impersonate', ImpersonateManagerUser::class);
         $router->aliasMiddleware('emcp.scope', EnsureMcpScopes::class);
         $router->aliasMiddleware('emcp.actor', ResolveMcpActor::class);
         $router->aliasMiddleware('emcp.rate', RateLimitMcpRequests::class);

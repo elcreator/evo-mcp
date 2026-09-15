@@ -5,6 +5,7 @@ return [
     'permissions_group' => 'eMCP',
     'permission_access' => 'Доступ к eMCP',
     'permission_manage' => 'Управление MCP серверами',
+    'menu_tokens' => 'MCP токены',
     'permission_dispatch' => 'Асинхронный запуск MCP задач',
     'errors' => [
         'forbidden' => 'Доступ запрещен',

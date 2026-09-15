@@ -69,6 +69,8 @@ class ContentSiblingsRangeTool extends BaseContentTool
             ->orderBy('site_content.menuindex', 'asc')
             ->orderBy('site_content.id', 'asc');
 
+        $this->applyManagerAccess($query);
+
         if ($args->withTvEntries !== []) {
             $query->withTVs($args->withTvEntries);
         }

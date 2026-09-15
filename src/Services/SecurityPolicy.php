@@ -67,7 +67,23 @@ final class SecurityPolicy
             return false;
         }
 
-        return str_starts_with(trim($toolName), 'evo.write.');
+        return $this->isWriteTool($toolName);
+    }
+
+    /**
+     * eMCP's own evo.write.* tools, plus contributed tools marked WritesSite.
+     */
+    public function isWriteTool(string $toolName): bool
+    {
+        if (str_starts_with(trim($toolName), 'evo.write.')) {
+            return true;
+        }
+
+        if (!function_exists('app') || !app()->bound(ToolRegistry::class)) {
+            return false;
+        }
+
+        return app(ToolRegistry::class)->isWriteTool($toolName);
     }
 
     /**

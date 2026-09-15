@@ -27,6 +27,8 @@ class McpRouteProvider implements RouteProviderInterface
 
         $group = $router->middleware([
             'emcp.jwt',
+            'emcp.impersonate',
+            'emcp.permission',
             'emcp.scope',
             'emcp.actor',
             'emcp.rate',

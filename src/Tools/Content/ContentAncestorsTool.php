@@ -62,6 +62,8 @@ class ContentAncestorsTool extends BaseContentTool
             $query->where('site_content_closure.depth', '<=', $args->depth);
         }
 
+        $this->applyManagerAccess($query);
+
         if ($args->withTvEntries !== []) {
             $query->withTVs($args->withTvEntries);
         }

@@ -14,7 +14,12 @@ class ResolveMcpActor
         $actorUserId = null;
         $context = 'cli';
 
-        if (function_exists('evo') && evo()->isLoggedIn('mgr')) {
+        $apiUserId = $request->attributes->get('emcp.auth.user_id');
+        if (is_numeric($apiUserId) && (int)$apiUserId > 0) {
+            // Token-authenticated request, already impersonating the owner: keep the "api" label for audit.
+            $actorUserId = (int)$apiUserId;
+            $context = 'api';
+        } elseif (function_exists('evo') && evo()->isLoggedIn('mgr')) {
             $actorUserId = (int)evo()->getLoginUserID('mgr');
             $context = 'mgr';
         } elseif ($request->attributes->has('sapi.jwt.user_id') || $request->attributes->has('sapi.jwt.sub')) {

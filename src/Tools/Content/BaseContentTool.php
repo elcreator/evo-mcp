@@ -132,6 +132,45 @@ abstract class BaseContentTool extends Tool
         // Reserved for explicit audit logger wiring in Gate E.
     }
 
+    /**
+     * Restricts a site_content query to what the acting manager user may see.
+     *
+     * Same rules as the manager tree: administrators (role 1) see everything; other users see
+     * documents that are not private to the manager or that belong to one of their document
+     * groups (when `use_udperms` is on), and unpublished documents only with `view_unpublished`.
+     * Without a manager identity (auth mode `none`) only public, published documents are visible.
+     */
+    protected function applyManagerAccess(Builder $query, string $table = 'site_content'): void
+    {
+        $loggedIn = function_exists('evo') && evo()->isLoggedIn('mgr') && !is_cli();
+        $role = $loggedIn ? (int)($_SESSION['mgrRole'] ?? 0) : 0;
+
+        if ($role === 1) {
+            return;
+        }
+
+        $udperms = !function_exists('evo') || (int)evo()->getConfig('use_udperms') === 1;
+        if ($udperms) {
+            $docgroups = $loggedIn ? array_map('intval', (array)($_SESSION['mgrDocgroups'] ?? [])) : [];
+
+            $query->where(function (Builder $q) use ($table, $docgroups): void {
+                $q->where($table . '.privatemgr', 0);
+                if ($docgroups !== []) {
+                    $q->orWhereExists(function ($sub) use ($table, $docgroups): void {
+                        $sub->selectRaw('1')
+                            ->from('document_groups')
+                            ->whereColumn('document_groups.document', $table . '.id')
+                            ->whereIn('document_groups.document_group', $docgroups);
+                    });
+                }
+            });
+        }
+
+        if (!$loggedIn || !evo()->hasPermission('view_unpublished', 'mgr')) {
+            $query->where($table . '.published', 1);
+        }
+    }
+
     protected function resolveMaxLimit(): int
     {
         $limitA = max(1, (int)config('cms.settings.eMCP.limits.max_result_items', 100));

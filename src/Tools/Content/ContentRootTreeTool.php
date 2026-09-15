@@ -56,6 +56,8 @@ class ContentRootTreeTool extends BaseContentTool
             ->where('t2.deleted', 0)
             ->orderBy('t2.id', 'asc');
 
+        $this->applyManagerAccess($query, 't2');
+
         if ($args->withTvEntries !== []) {
             $query->withTVs($args->withTvEntries, ':', true);
         }

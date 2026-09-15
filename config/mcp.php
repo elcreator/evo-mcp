@@ -15,7 +15,7 @@ return [
             'auth' => 'sapi_jwt',
             'scopes' => ['mcp:read', 'mcp:call'],
             'scope_map' => [
-                'mcp:read' => ['initialize', 'tools/list', 'resources/read'],
+                'mcp:read' => ['initialize', 'ping', 'tools/list', 'resources/list', 'resources/read', 'resources/templates/list', 'prompts/list', 'prompts/get', 'notifications/*'],
                 'mcp:call' => ['tools/call'],
             ],
             'limits' => [
@@ -28,6 +28,9 @@ return [
             'security' => [
                 'deny_tools' => [],
             ],
+            // Tool classes from other packages to expose on this server (alternative to
+            // registering an EvolutionCMS\eMCP\Contracts\ToolProvider at runtime).
+            'extra_tools' => [],
         ],
         [
             'handle' => 'content-local',
