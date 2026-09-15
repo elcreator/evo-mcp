@@ -489,10 +489,8 @@ Never log raw values of:
 - `api_key`
 
 ## 14) Multilingual Support
-Required language files:
-- `lang/en/global.php`
-- `lang/uk/global.php`
-- `lang/ru/global.php`
+Required language files (`lang/{locale}/global.php`) for all supported locales:
+`az`, `be`, `bg`, `cs`, `da`, `de`, `en`, `es`, `fa`, `fi`, `fr`, `he`, `it`, `ja`, `nl`, `nn`, `pl`, `pt`, `sk`, `sv`, `uk`, `zh`.
 
 Minimum keys:
 - `title`

@@ -236,7 +236,7 @@
 - AC11: Worker `emcp_dispatch` авто-реєструється, якщо `sTask` встановлений.
 - AC12: Async payload містить actor/context/trace/idempotency поля.
 - AC13: `queue.failover=sync` дає синхронний fallback при відсутності `sTask`.
-- AC14: Локалізації `en/uk/ru` покривають manager/error/permissions ключі.
+- AC14: Локалізації всіх підтримуваних мов (`az/be/bg/cs/da/de/en/es/fa/fi/fr/he/it/ja/nl/nn/pl/pt/sk/sv/uk/zh`) покривають manager/error/permissions ключі.
 - AC15: Audit log не містить raw bearer token та секретів.
 
 ### 11.3 Domain/orchestration contract
@@ -332,7 +332,7 @@ Extension compliance boundary:
 - FR12: Safe audit log with redaction.
 - FR13: Rate limits + payload size limits.
 - FR14: Idempotency for async dispatch with `409` conflict semantics.
-- FR15: Multilingual manager/error/permissions keys (`en/uk/ru`).
+- FR15: Multilingual manager/error/permissions keys across all supported locales (`az/be/bg/cs/da/de/en/es/fa/fi/fr/he/it/ja/nl/nn/pl/pt/sk/sv/uk/zh`).
 
 ### 15.2 Domain/Extension (FR16-FR26)
 - FR16: Canonical `evo.content.*` tool profile (`search/get/root_tree/descendants/ancestors/children/siblings`).
