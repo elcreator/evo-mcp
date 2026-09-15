@@ -22,6 +22,8 @@ class ScopePolicy
             'prompts/list',
             'prompts/get',
             'completion/complete',
+            'resources/templates/list',
+            'notifications/*',
         ],
         'mcp:call' => [
             'tools/call',
@@ -77,25 +79,55 @@ class ScopePolicy
 
     public function requestHasScope(Request $request, string $requiredScope): bool
     {
-        $scopes = $request->attributes->get('sapi.jwt.scopes', []);
-        if (is_string($scopes)) {
-            $scopes = array_values(array_filter(array_map('trim', explode(',', $scopes))));
-        }
-
-        if (!is_array($scopes)) {
-            return false;
-        }
-
-        $scopes = array_values(array_filter(array_map(
-            static fn(mixed $value): string => trim((string)$value),
-            $scopes
-        )));
-
+        $scopes = $this->requestScopes($request);
         if (in_array('*', $scopes, true)) {
             return true;
         }
 
         return in_array($requiredScope, $scopes, true);
+    }
+
+    /**
+     * Scopes granted to the request by whichever auth middleware ran (PAT first, then sApi JWT).
+     *
+     * @return array<int, string>
+     */
+    public function requestScopes(Request $request): array
+    {
+        $scopes = $request->attributes->get('emcp.auth.scopes');
+        if ($scopes === null) {
+            $scopes = $request->attributes->get('sapi.jwt.scopes', []);
+        }
+
+        if (is_string($scopes)) {
+            $scopes = array_values(array_filter(array_map('trim', explode(',', $scopes))));
+        }
+
+        if (!is_array($scopes)) {
+            return [];
+        }
+
+        return array_values(array_filter(array_map(
+            static fn(mixed $value): string => trim((string)$value),
+            $scopes
+        )));
+    }
+
+    /**
+     * Scope a `tools/call` needs on top of `mcp:call`, or null when the tool is not a write tool.
+     */
+    public function resolveToolScope(string $toolName): ?string
+    {
+        $isWrite = str_starts_with(trim($toolName), 'evo.write.')
+            || (function_exists('app') && app()->bound(ToolRegistry::class) && app(ToolRegistry::class)->isWriteTool($toolName));
+
+        if (!$isWrite) {
+            return null;
+        }
+
+        $scope = trim((string)config('cms.settings.eMCP.auth.write_scope', 'mcp:write'));
+
+        return $scope !== '' ? $scope : 'mcp:write';
     }
 
     /**

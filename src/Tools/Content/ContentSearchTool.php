@@ -99,6 +99,7 @@ class ContentSearchTool extends BaseContentTool
         }
 
         $query->where('deleted', ($args->deleted ?? false) ? 1 : 0);
+        $this->applyManagerAccess($query);
 
         if ($args->template !== null) {
             $query->where('template', $args->template);

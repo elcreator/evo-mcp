@@ -26,7 +26,7 @@ class EnsureMcpScopes
             return $next($request);
         }
 
-        if (!$this->hasJwtContext($request)) {
+        if (!$this->hasAuthContext($request)) {
             return TransportError::response($request, 401, 'unauthenticated', 'Unauthenticated');
         }
 
@@ -50,11 +50,36 @@ class EnsureMcpScopes
 
         $request->attributes->set('emcp.required_scope', $requiredScope);
 
+        $toolScope = $this->resolveToolScope($request, $method);
+        if ($toolScope !== null && !$this->scopePolicy->requestHasScope($request, $toolScope)) {
+            return TransportError::response($request, 403, 'scope_denied', 'Scope denied');
+        }
+
         return $next($request);
     }
 
-    private function hasJwtContext(Request $request): bool
+    private function resolveToolScope(Request $request, string $method): ?string
     {
+        if ($method !== 'tools/call') {
+            return null;
+        }
+
+        $payload = json_decode((string)$request->getContent(), true);
+        if (!is_array($payload)) {
+            return null;
+        }
+
+        $toolName = trim((string)($payload['params']['name'] ?? ''));
+
+        return $toolName !== '' ? $this->scopePolicy->resolveToolScope($toolName) : null;
+    }
+
+    private function hasAuthContext(Request $request): bool
+    {
+        if ($request->attributes->has('emcp.auth.user_id')) {
+            return true;
+        }
+
         if ($request->attributes->has('sapi.jwt.payload')) {
             return true;
         }

@@ -13,9 +13,16 @@ use Laravel\Mcp\Server\Attributes\Description;
 use Laravel\Mcp\Server\Attributes\Name;
 
 #[Name('evo.content.get')]
-#[Description('Get one content document by id with optional TVs projection.')]
+#[Description('Get one content document by id, including its body (content, introtext, menutitle) and optional TVs projection.')]
 class ContentGetTool extends BaseContentTool
 {
+    /**
+     * A single document is read to be worked on, so unlike list tools it carries the body fields.
+     *
+     * @var array<int, string>
+     */
+    private const DETAIL_FIELDS = ['menutitle', 'introtext', 'content', 'link_attributes', 'searchable', 'cacheable', 'richtext', 'contentType', 'editedby', 'createdby', 'publishedon'];
+
     /**
      * @return array<string, mixed>
      */
@@ -48,6 +55,8 @@ class ContentGetTool extends BaseContentTool
             ->where('id', $args->id)
             ->where('deleted', 0);
 
+        $this->applyManagerAccess($query);
+
         if ($args->withTvEntries !== []) {
             $query->withTVs($args->withTvEntries);
         }
@@ -67,7 +76,9 @@ class ContentGetTool extends BaseContentTool
         $item = $queryResult instanceof SiteContent ? $queryResult : null;
 
         return [
-            'item' => $item ? $this->projectItem($item, $args->withTvNames) : null,
+            'item' => $item
+                ? $this->contentMapper()->map($item, array_merge(self::PUBLIC_FIELDS, self::DETAIL_FIELDS), $args->withTvNames)
+                : null,
         ];
     }
 

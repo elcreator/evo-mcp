@@ -15,8 +15,14 @@ return [
     ],
 
     'auth' => [
-        'mode' => 'sapi_jwt',
+        // pat      - personal access tokens issued in the manager / by artisan (no extra packages)
+        // sapi_jwt - JWT issued by seiger/sapi
+        // none     - no API authentication (development only)
+        // In every mode the request runs as the authenticated manager user, with that user's permissions.
+        'mode' => 'pat',
         'require_scopes' => true,
+        // Extra scope a token needs to call evo.write.* tools.
+        'write_scope' => 'mcp:write',
         'scope_map' => [
             'mcp:read' => [
                 'initialize',
@@ -27,10 +33,18 @@ return [
                 'prompts/list',
                 'prompts/get',
                 'completion/complete',
+                'resources/templates/list',
+                // JSON-RPC notifications (notifications/initialized, notifications/cancelled, ...)
+                'notifications/*',
             ],
             'mcp:call' => ['tools/call'],
             'mcp:admin' => ['admin/*'],
         ],
+    ],
+
+    'tokens' => [
+        // Manager page where a user creates their own tokens: {manager_url}/{manager_prefix}/tokens
+        'self_service' => true,
     ],
 
     'acl' => [

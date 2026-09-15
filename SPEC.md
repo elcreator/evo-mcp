@@ -118,9 +118,7 @@ eMCP/
 │     ├─ *_add_emcp_permissions.php
 │     └─ *_add_emcp_role_permissions.php (optional if split)
 ├─ lang/
-│  ├─ en/global.php
-│  ├─ uk/global.php
-│  └─ ru/global.php
+│  └─ {az,be,bg,cs,da,de,en,es,fa,fi,fr,he,it,ja,nl,nn,pl,pt,sk,sv,uk,zh}/global.php
 ├─ plugins/
 │  └─ eMCPPlugin.php
 ├─ src/
@@ -797,10 +795,8 @@ Recommended orchestration fields (Post-MVP SHOULD):
 - `authorization`, `token`, `jwt`, `secret`, `cookie`, `password`, `api_key`.
 
 ## 14. Multilingual contract
-Mandatory translation files:
-- `lang/en/global.php`
-- `lang/uk/global.php`
-- `lang/ru/global.php`
+Mandatory translation files (`lang/{locale}/global.php`) for all supported locales:
+`az`, `be`, `bg`, `cs`, `da`, `de`, `en`, `es`, `fa`, `fi`, `fr`, `he`, `it`, `ja`, `nl`, `nn`, `pl`, `pt`, `sk`, `sv`, `uk`, `zh`.
 
 Required keys:
 - `title`

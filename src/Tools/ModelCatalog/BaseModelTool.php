@@ -126,8 +126,49 @@ abstract class BaseModelTool extends Tool
         }
 
         $this->resolvePublicFields($class);
+        $this->authorizeModel(class_basename($class));
 
         return $class;
+    }
+
+    /**
+     * Manager permission a user needs to read each catalog model — the same one that opens the
+     * corresponding manager screen. Administrators (role 1) pass regardless.
+     *
+     * @var array<string, string>
+     */
+    protected const MODEL_PERMISSIONS = [
+        'SiteTemplate' => 'edit_template',
+        'SiteTmplvar' => 'edit_template',
+        'SiteTmplvarContentvalue' => 'edit_template',
+        'SiteSnippet' => 'edit_snippet',
+        'SitePlugin' => 'edit_plugin',
+        'SiteModule' => 'edit_module',
+        'Category' => 'category_manager',
+        'User' => 'edit_user',
+        'UserAttribute' => 'edit_user',
+        'UserRole' => 'edit_role',
+        'Permissions' => 'edit_role',
+        'PermissionsGroups' => 'edit_role',
+        'RolePermissions' => 'edit_role',
+    ];
+
+    protected function authorizeModel(string $alias): void
+    {
+        if (!function_exists('evo')) {
+            return;
+        }
+
+        if ((int)($_SESSION['mgrRole'] ?? 0) === 1) {
+            return;
+        }
+
+        $permission = static::MODEL_PERMISSIONS[$alias] ?? 'settings';
+        if (!evo()->hasPermission($permission, 'mgr')) {
+            throw ValidationException::withMessages([
+                'model' => "Reading [{$alias}] requires the [{$permission}] permission.",
+            ]);
+        }
     }
 
     /**

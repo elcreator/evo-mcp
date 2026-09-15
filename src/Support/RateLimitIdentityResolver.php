@@ -19,6 +19,11 @@ final class RateLimitIdentityResolver
         }
 
         if ($context === 'api' || $context === '') {
+            $apiUserId = $request->attributes->get('emcp.auth.user_id');
+            if (is_numeric($apiUserId) && (int)$apiUserId > 0) {
+                return 'api:' . (int)$apiUserId;
+            }
+
             $jwtUserId = trim((string)$request->attributes->get('sapi.jwt.user_id', ''));
             if ($jwtUserId !== '') {
                 return 'api:' . $jwtUserId;

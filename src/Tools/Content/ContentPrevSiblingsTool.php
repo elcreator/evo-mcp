@@ -55,6 +55,8 @@ class ContentPrevSiblingsTool extends BaseContentTool
             ->orderBy('site_content.menuindex', 'desc')
             ->orderBy('site_content.id', 'desc');
 
+        $this->applyManagerAccess($query);
+
         if ($args->withTvEntries !== []) {
             $query->withTVs($args->withTvEntries);
         }
