@@ -35,7 +35,7 @@ Operations runbook: `OPERATIONS.md`.
 - PHP 8.3+
 - Composer 2.2+
 - `seiger/sapi` 1.x (installed as dependency; only used when `auth.mode = sapi_jwt`)
-- `seiger/stask` 1.x (installed as dependency)
+- `seiger/stask` 1.x (from 1.0.10) or 2.x, installed as dependency (2.x needs PHP 8.4)
 
 ## Install
 From your Evo `core` directory:

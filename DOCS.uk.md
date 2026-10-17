@@ -81,7 +81,7 @@ php artisan make:mcp-tool HealthTool
 - PHP 8.3+
 - Composer 2.2+
 - `seiger/sapi` 1.x
-- `seiger/stask` 1.x
+- `seiger/stask` 1.x (від 1.0.10) або 2.x (2.x потребує PHP 8.4)
 
 ## 4) Встановлення
 З директорії `core` Evo:

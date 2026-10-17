@@ -81,7 +81,7 @@ Mandatory:
 - PHP 8.3+
 - Composer 2.2+
 - `seiger/sapi` 1.x
-- `seiger/stask` 1.x
+- `seiger/stask` 1.x (from 1.0.10) or 2.x (2.x needs PHP 8.4)
 
 ## 4) Install
 From Evo `core` directory:

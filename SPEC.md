@@ -165,7 +165,7 @@ eMCP/
 
 ### 3.2 Required integrations
 - `seiger/sapi` (^1.0, для API mode).
-- `seiger/stask` (^1.0, для async mode).
+- `seiger/stask` (^1.0.10 || ^2.0, для async mode).
 
 ### 3.3 Autoload
 - PSR-4 namespace `EvolutionCMS\eMCP\`.

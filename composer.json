@@ -14,8 +14,8 @@
     "php": "^8.3",
     "evolution-cms/evolution": "^3.5.2",
     "laravel/mcp": "^0.5.9",
-    "seiger/sapi": "*",
-    "seiger/stask": "*"
+    "seiger/sapi": "^1.0",
+    "seiger/stask": "^1.0.10 || ^2.0"
   },
   "autoload": {
     "psr-4": {
@@ -39,6 +39,7 @@
     "test:unit:settings-file": "php tests/Unit/SettingsFileTest.php",
     "test:unit:tool-registry": "php tests/Unit/ToolRegistryTest.php",
     "test:unit:tool-error": "php tests/Unit/ToolErrorTest.php",
+    "test:unit:governance-lock": "php tests/Unit/GovernanceLockWriteTest.php",
     "test:feature:dispatch-idempotency": "php tests/Feature/DispatchIdempotencyBehaviorTest.php",
     "test:feature:dispatch-async-failover": "php tests/Feature/DispatchAsyncFailoverBehaviorTest.php",
     "test:feature:dispatch-materialization": "php tests/Feature/DispatchMaterializationPolicyTest.php",
@@ -83,6 +84,7 @@
       "@test:unit:settings-file",
       "@test:unit:tool-registry",
       "@test:unit:tool-error",
+      "@test:unit:governance-lock",
       "@test:phase25",
       "@test:phase25:raw-tv",
       "@test:phase3",

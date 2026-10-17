@@ -35,7 +35,7 @@ Versioning і BC policy: `PRD.md` (розділ `API Stability Policy`).
 - PHP 8.3+
 - Composer 2.2+
 - `seiger/sapi` 1.x (встановлюється як залежність)
-- `seiger/stask` 1.x (встановлюється як залежність)
+- `seiger/stask` 1.x (від 1.0.10) або 2.x, встановлюється як залежність (2.x потребує PHP 8.4)
 
 ## Встановлення
 З директорії `core` вашого Evo:

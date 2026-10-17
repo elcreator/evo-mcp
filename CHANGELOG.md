@@ -13,6 +13,7 @@
 - `tools/list` leaves out tools matched by `deny_tools`.
 - Backend code gate: `ExecutesCode` marker, `security.enable_code_tools` (off by default) and the `mcp:code` scope. `evo.write.elements.save` for snippets, plugins and TVs with `@EVAL` / `@SELECT` / `@INCLUDE` bindings, and document TV values with code bindings, now need them plus a `save_snippet` / `save_plugin` / `save_module` permission (Evo's `BackendCodePermissions`), even when the user has `save_template` or `save_document`.
 ### Changed
+- `seiger/sapi` and `seiger/stask` have version constraints (`^1.0`, `^1.0.10 || ^2.0`) instead of `*`; `composer validate --strict` passes without warnings again.
 - `ToolRegistry` follows SPEC 6.4/6.5: contributed tools in `evo.*`, with a duplicate name, or not a `Tool` are rejected (throws in debug mode, logged otherwise).
 - The JSON-RPC body is decoded once per request and shared by the scope and rate-limit middleware.
 - `destructiveHint` is `true` for `evo.write.content.update` and `evo.write.elements.save` (they overwrite without a revision); `WritesSite` tools no longer get `destructiveHint: false` they did not declare.
