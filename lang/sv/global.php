@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'API-endpoint', 'hint' => 'Tokenautentiserad endpoint för externa agenter.'],
             'require_scopes' => ['label' => 'Kräv token-scopes', 'hint' => 'Varje anrop måste täckas av tokenets scopes.'],
             'enable_write_tools' => ['label' => 'Tillåt skrivverktyg', 'hint' => 'Agenter får skapa och ändra dokument och element (evo.write.*). Tokenet behöver även scopet mcp:write.'],
+            'enable_destructive_tools' => ['label' => 'Tillåt destruktiva verktyg', 'hint' => 'Agenter får anropa tilläggsverktyg som raderar data. Kräver även skrivverktyg; tokenet behöver även scopet mcp:destructive.'],
+            'enable_code_tools' => ['label' => 'Tillåt skrivning av backend-kod', 'hint' => 'Agenter får spara snippets, plugins och TV-bindningar som kör kod på servern (@EVAL, @SELECT, @INCLUDE). Kräver även skrivverktyg; tokenet behöver även scopet mcp:code, och dess ägare en behörighet att redigera snippets, plugins eller moduler.'],
             'self_service' => ['label' => 'Självbetjäningssida för tokens', 'hint' => 'Användare skapar egna tokens i managern.'],
             'rate_limit' => ['label' => 'Begränsning av förfrågningar', 'hint' => 'Begränsar antalet förfrågningar per minut för varje användare.'],
             'audit' => ['label' => 'Granskningslogg', 'hint' => 'Logga varje MCP-anrop i granskningsloggen.'],

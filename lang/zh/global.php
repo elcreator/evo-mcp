@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'API 端点', 'hint' => '供外部代理使用的令牌认证端点。'],
             'require_scopes' => ['label' => '要求令牌 scopes', 'hint' => '每次调用都必须在其令牌的 scopes 范围内。'],
             'enable_write_tools' => ['label' => '允许写入工具', 'hint' => '代理可以创建和修改文档与元素（evo.write.*）。令牌还需要 mcp:write scope。'],
+            'enable_destructive_tools' => ['label' => '允许破坏性工具', 'hint' => '代理可以调用会删除数据的扩展工具。还需要启用写入工具；令牌还需要 mcp:destructive scope。'],
+            'enable_code_tools' => ['label' => '允许写入后端代码', 'hint' => '代理可以保存在服务器上执行代码的代码片段、插件和 TV 绑定（@EVAL, @SELECT, @INCLUDE）。还需要启用写入工具；令牌还需要 mcp:code scope，其所有者还需要编辑代码片段、插件或模块的权限。'],
             'self_service' => ['label' => '令牌自助页面', 'hint' => '用户在管理后台创建自己的令牌。'],
             'rate_limit' => ['label' => '请求频率限制', 'hint' => '限制每个用户每分钟的请求数。'],
             'audit' => ['label' => '审计日志', 'hint' => '将每次 MCP 调用记录到审计日志。'],

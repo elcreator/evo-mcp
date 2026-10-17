@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'API-endpoint', 'hint' => 'Tokenilla todennettu endpoint ulkoisille agenteille.'],
             'require_scopes' => ['label' => 'Vaadi tokenin scopet', 'hint' => 'Jokaisen kutsun on kuuluttava tokenin scopeihin.'],
             'enable_write_tools' => ['label' => 'Salli kirjoitustyökalut', 'hint' => 'Agentit voivat luoda ja muuttaa dokumentteja ja elementtejä (evo.write.*). Token tarvitsee lisäksi scopen mcp:write.'],
+            'enable_destructive_tools' => ['label' => 'Salli tuhoavat työkalut', 'hint' => 'Agentit voivat kutsua laajennusten työkaluja, jotka poistavat tietoja. Vaatii myös kirjoitustyökalut; token tarvitsee lisäksi scopen mcp:destructive.'],
+            'enable_code_tools' => ['label' => 'Salli taustajärjestelmän koodin kirjoittaminen', 'hint' => 'Agentit voivat tallentaa snippetejä, laajennuksia ja TV-sidontoja, jotka suorittavat koodia palvelimella (@EVAL, @SELECT, @INCLUDE). Vaatii myös kirjoitustyökalut; token tarvitsee lisäksi scopen mcp:code ja sen omistaja oikeuden muokata snippetejä, laajennuksia tai moduuleja.'],
             'self_service' => ['label' => 'Tokenien itsepalvelusivu', 'hint' => 'Käyttäjät luovat omat tokeninsa managerissa.'],
             'rate_limit' => ['label' => 'Pyyntörajoitus', 'hint' => 'Rajoittaa kunkin käyttäjän pyyntöjä minuutissa.'],
             'audit' => ['label' => 'Auditointiloki', 'hint' => 'Kirjaa jokainen MCP-kutsu auditointilokiin.'],

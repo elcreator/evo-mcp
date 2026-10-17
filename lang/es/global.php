@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'Endpoint de API', 'hint' => 'Endpoint autenticado por token para agentes externos.'],
             'require_scopes' => ['label' => 'Exigir scopes del token', 'hint' => 'Cada llamada debe estar cubierta por los scopes de su token.'],
             'enable_write_tools' => ['label' => 'Permitir herramientas de escritura', 'hint' => 'Los agentes pueden crear y modificar documentos y elementos (evo.write.*). El token también necesita el scope mcp:write.'],
+            'enable_destructive_tools' => ['label' => 'Permitir herramientas destructivas', 'hint' => 'Los agentes pueden llamar a herramientas de extensiones que eliminan datos. Requiere también las herramientas de escritura; el token también necesita el scope mcp:destructive.'],
+            'enable_code_tools' => ['label' => 'Permitir escribir código de backend', 'hint' => 'Los agentes pueden guardar snippets, plugins y vinculaciones de TV que ejecutan código en el servidor (@EVAL, @SELECT, @INCLUDE). Requiere también las herramientas de escritura; el token también necesita el scope mcp:code, y su propietario, un permiso para editar snippets, plugins o módulos.'],
             'self_service' => ['label' => 'Página de autoservicio de tokens', 'hint' => 'Los usuarios crean sus propios tokens en el manager.'],
             'rate_limit' => ['label' => 'Límite de peticiones', 'hint' => 'Limita las peticiones por minuto de cada usuario.'],
             'audit' => ['label' => 'Registro de auditoría', 'hint' => 'Registrar cada llamada MCP en el registro de auditoría.'],

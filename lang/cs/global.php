@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'API endpoint', 'hint' => 'Endpoint s ověřením tokenem pro externí agenty.'],
             'require_scopes' => ['label' => 'Vyžadovat scopes tokenu', 'hint' => 'Každé volání musí být pokryto scopes svého tokenu.'],
             'enable_write_tools' => ['label' => 'Povolit zapisovací nástroje', 'hint' => 'Agenti mohou vytvářet a měnit dokumenty a elementy (evo.write.*). Token navíc potřebuje scope mcp:write.'],
+            'enable_destructive_tools' => ['label' => 'Povolit destruktivní nástroje', 'hint' => 'Agenti mohou volat nástroje rozšíření, které mažou data. Vyžaduje také zapisovací nástroje; token navíc potřebuje scope mcp:destructive.'],
+            'enable_code_tools' => ['label' => 'Povolit zápis backendového kódu', 'hint' => 'Agenti mohou ukládat snippety, pluginy a vazby TV, které spouštějí kód na serveru (@EVAL, @SELECT, @INCLUDE). Vyžaduje také zapisovací nástroje; token navíc potřebuje scope mcp:code a jeho vlastník oprávnění upravovat snippety, pluginy nebo moduly.'],
             'self_service' => ['label' => 'Samoobslužná stránka tokenů', 'hint' => 'Uživatelé si vytvářejí vlastní tokeny v manažeru.'],
             'rate_limit' => ['label' => 'Omezení počtu požadavků', 'hint' => 'Omezí počet požadavků za minutu pro každého uživatele.'],
             'audit' => ['label' => 'Auditní log', 'hint' => 'Zapisovat každé volání MCP do auditního logu.'],

@@ -75,6 +75,8 @@
                             @if ($scope === 'mcp:read') — list tools, read resources
                             @elseif ($scope === 'mcp:call') — call read-only tools
                             @elseif ($scope === 'mcp:write') — call <code>evo.write.*</code> tools (still limited by your permissions)
+                            @elseif ($scope === 'mcp:destructive') — call tools that delete data (only if the site allows them)
+                            @elseif ($scope === 'mcp:code') — save snippets, plugins and code bindings that run on the server (only if the site allows it)
                             @elseif ($scope === 'mcp:admin') — administrative methods
                             @endif
                         </span>

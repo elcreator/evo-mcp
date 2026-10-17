@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'Endpoint API', 'hint' => 'Endpoint uwierzytelniany tokenem dla zewnętrznych agentów.'],
             'require_scopes' => ['label' => 'Wymagaj scopes tokenu', 'hint' => 'Każde wywołanie musi mieścić się w scopes swojego tokenu.'],
             'enable_write_tools' => ['label' => 'Zezwól na narzędzia zapisu', 'hint' => 'Agenci mogą tworzyć i zmieniać dokumenty oraz elementy (evo.write.*). Token potrzebuje też scope mcp:write.'],
+            'enable_destructive_tools' => ['label' => 'Zezwól na narzędzia destrukcyjne', 'hint' => 'Agenci mogą wywoływać narzędzia rozszerzeń, które usuwają dane. Wymaga też narzędzi zapisu; token potrzebuje też scope mcp:destructive.'],
+            'enable_code_tools' => ['label' => 'Zezwól na zapis kodu backendu', 'hint' => 'Agenci mogą zapisywać snippety, pluginy i powiązania TV, które uruchamiają kod na serwerze (@EVAL, @SELECT, @INCLUDE). Wymaga też narzędzi zapisu; token potrzebuje też scope mcp:code, a jego właściciel uprawnienia do edycji snippetów, pluginów lub modułów.'],
             'self_service' => ['label' => 'Strona samoobsługi tokenów', 'hint' => 'Użytkownicy tworzą własne tokeny w menedżerze.'],
             'rate_limit' => ['label' => 'Limit żądań', 'hint' => 'Ogranicza liczbę żądań na minutę dla każdego użytkownika.'],
             'audit' => ['label' => 'Dziennik audytu', 'hint' => 'Zapisuj każde wywołanie MCP w dzienniku audytu.'],

@@ -19,6 +19,8 @@ final class SettingsCatalog
         'mode.api' => 'mode_api',
         'auth.require_scopes' => 'require_scopes',
         'security.enable_write_tools' => 'enable_write_tools',
+        'security.enable_destructive_tools' => 'enable_destructive_tools',
+        'security.enable_code_tools' => 'enable_code_tools',
         'tokens.self_service' => 'self_service',
         'rate_limit.enabled' => 'rate_limit',
         'logging.audit_enabled' => 'audit',

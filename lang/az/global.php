@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'API endpoint-i', 'hint' => 'Xarici agentlər üçün tokenlə autentifikasiya olunan endpoint.'],
             'require_scopes' => ['label' => 'Token scope-larını tələb et', 'hint' => 'Hər çağırış tokenin scope-ları ilə əhatə olunmalıdır.'],
             'enable_write_tools' => ['label' => 'Yazma alətlərinə icazə ver', 'hint' => 'Agentlər sənədləri və elementləri yarada və dəyişə bilər (evo.write.*). Tokenə həmçinin mcp:write scope-u lazımdır.'],
+            'enable_destructive_tools' => ['label' => 'Dağıdıcı alətlərə icazə ver', 'hint' => 'Agentlər məlumatları silən genişlənmə alətlərini çağıra bilər. Yazma alətləri də lazımdır; tokenə həmçinin mcp:destructive scope-u lazımdır.'],
+            'enable_code_tools' => ['label' => 'Backend kodunu yazmağa icazə ver', 'hint' => 'Agentlər serverdə kod icra edən snippetləri, pluginləri və TV bağlamalarını (@EVAL, @SELECT, @INCLUDE) saxlaya bilər. Yazma alətləri də lazımdır; tokenə həmçinin mcp:code scope-u, onun sahibinə isə snippetləri, pluginləri və ya modulları redaktə etmək icazəsi lazımdır.'],
             'self_service' => ['label' => 'Tokenlərin özünəxidmət səhifəsi', 'hint' => 'İstifadəçilər öz tokenlərini managerdə yaradır.'],
             'rate_limit' => ['label' => 'Sorğu limiti', 'hint' => 'Hər istifadəçi üçün dəqiqədəki sorğu sayını məhdudlaşdırır.'],
             'audit' => ['label' => 'Audit jurnalı', 'hint' => 'Hər MCP çağırışını audit jurnalına yazır.'],

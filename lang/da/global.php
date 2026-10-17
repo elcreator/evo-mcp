@@ -26,6 +26,8 @@ return [
             'mode_api' => ['label' => 'API-endpoint', 'hint' => 'Token-godkendt endpoint til eksterne agenter.'],
             'require_scopes' => ['label' => 'Kræv token-scopes', 'hint' => 'Hvert kald skal være dækket af tokenets scopes.'],
             'enable_write_tools' => ['label' => 'Tillad skriveværktøjer', 'hint' => 'Agenter må oprette og ændre dokumenter og elementer (evo.write.*). Tokenet skal også have scopet mcp:write.'],
+            'enable_destructive_tools' => ['label' => 'Tillad destruktive værktøjer', 'hint' => 'Agenter må kalde udvidelsesværktøjer, der sletter data. Kræver også skriveværktøjer; tokenet skal også have scopet mcp:destructive.'],
+            'enable_code_tools' => ['label' => 'Tillad skrivning af backend-kode', 'hint' => 'Agenter må gemme snippets, plugins og TV-bindinger, der kører kode på serveren (@EVAL, @SELECT, @INCLUDE). Kræver også skriveværktøjer; tokenet skal også have scopet mcp:code, og dets ejer en tilladelse til at redigere snippets, plugins eller moduler.'],
             'self_service' => ['label' => 'Selvbetjeningsside for tokens', 'hint' => 'Brugere opretter selv deres tokens i manageren.'],
             'rate_limit' => ['label' => 'Begrænsning af forespørgsler', 'hint' => 'Begrænser antallet af forespørgsler pr. minut for hver bruger.'],
             'audit' => ['label' => 'Revisionslog', 'hint' => 'Registrér hvert MCP-kald i revisionsloggen.'],
